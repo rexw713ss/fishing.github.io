@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>海洋淨化大作戰 v5.0</title>
+    <title>海洋淨化大作戰 v5.1</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+TC:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+TC:wght@400;700&display=swap');
 
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Noto Sans TC', 'Fredoka One', sans-serif; background-color: #333; user-select: none; touch-action: none; }
 
@@ -15,42 +15,22 @@
             overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.5); transition: background 0.5s;
         }
 
-        /* 🫧 背景氣泡特效 */
-        .bubble {
-            position: absolute; bottom: -50px; background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%; pointer-events: none; animation: rise linear infinite;
-        }
+        /* 背景與特效 */
+        .bubble { position: absolute; bottom: -50px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; pointer-events: none; animation: rise linear infinite; }
         @keyframes rise { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
-
-        /* 特效 */
         .fever-mode { background: linear-gradient(to bottom, #FFD700 20%, #FF8C00 50%, #FF4500 100%) !important; }
         .shake-effect { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
         @keyframes shake { 10%, 90% { transform: translate3d(-5px, 0, 0); } 20%, 80% { transform: translate3d(5px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-5px, 0, 0); } 40%, 60% { transform: translate3d(5px, 0, 0); } }
 
-        /* UI */
-        .ui-layer {
-            position: absolute; top: 20px; left: 20px; right: 20px; z-index: 100;
-            display: flex; justify-content: space-between; pointer-events: none;
-            color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-        }
-        .score-box, .timer-box {
-            background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 20px;
-            font-size: 1.2rem; border: 3px solid #fff;
-        }
-        #combo-box {
-            position: absolute; top: 80px; left: 20px; font-size: 1.5rem; color: #FFEB3B; font-weight: bold;
-            opacity: 0; transition: opacity 0.3s; text-shadow: 2px 2px 0 #000;
-        }
+        /* UI 層 */
+        .ui-layer { position: absolute; top: 20px; left: 20px; right: 20px; z-index: 100; display: flex; justify-content: space-between; pointer-events: none; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+        .score-box, .timer-box { background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 20px; font-size: 1.2rem; border: 3px solid #fff; }
+        #combo-box { position: absolute; top: 80px; left: 20px; font-size: 1.5rem; color: #FFEB3B; font-weight: bold; opacity: 0; transition: opacity 0.3s; text-shadow: 2px 2px 0 #000; }
         .combo-active { opacity: 1 !important; animation: popIn 0.3s; }
-
-        /* 🔥 能量條 (大絕招) */
-        .energy-container {
-            position: absolute; top: 80px; right: 20px; width: 150px; height: 20px;
-            background: rgba(0,0,0,0.5); border: 2px solid white; border-radius: 10px; overflow: hidden;
-        }
+        .energy-container { position: absolute; top: 80px; right: 20px; width: 150px; height: 20px; background: rgba(0,0,0,0.5); border: 2px solid white; border-radius: 10px; overflow: hidden; }
         #energy-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #00C9FF, #92FE9D); transition: width 0.3s; }
-        
-        /* 🚀 大絕招按鈕 (浮動) */
+
+        /* 大絕招按鈕 */
         #btn-ult {
             position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%) scale(0);
             width: 100px; height: 100px; border-radius: 50%; border: 4px solid #fff;
@@ -67,32 +47,36 @@
         #player-avatar { position: absolute; top: -40px; left: 30px; width: 50px; height: 50px; background-image: url('figs/earth.png'); background-size: contain; background-repeat: no-repeat; }
         #fishing-line { position: absolute; top: 20%; left: 50%; width: 4px; height: 0px; background-color: white; z-index: 40; transform: translateX(-50%); }
         #hook { position: absolute; top: 20%; left: 50%; width: 40px; height: 40px; transform: translate(-50%, 0); z-index: 40; font-size: 35px; text-align: center; line-height: 40px; }
-        
-        /* 暈眩提示 */
-        #stun-msg {
-            position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 3rem; color: red; font-weight: bold; text-shadow: 2px 2px 0 white;
-            z-index: 180; animation: shake 0.2s infinite; display: none;
-        }
+        #stun-msg { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; color: red; font-weight: bold; text-shadow: 2px 2px 0 white; z-index: 180; animation: shake 0.2s infinite; display: none; }
+        .sea-item { position: absolute; width: 70px; height: 70px; font-size: 50px; display: flex; justify-content: center; align-items: center; z-index: 30; will-change: transform, left, top; }
 
-        .sea-item {
-            position: absolute; width: 70px; height: 70px; font-size: 50px;
-            display: flex; justify-content: center; align-items: center; z-index: 30;
-            will-change: transform, left, top; /* 優化效能 */
-        }
-
-        /* 控制按鈕 */
+        /* 控制與輸入 */
         .controls-layer { position: absolute; bottom: 20px; left: 0; width: 100%; height: 80px; z-index: 150; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; box-sizing: border-box; pointer-events: auto; }
         .control-btn { width: 80px; height: 80px; background: rgba(255, 255, 255, 0.3); border: 3px solid white; border-radius: 50%; color: white; font-size: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; backdrop-filter: blur(5px); -webkit-tap-highlight-color: transparent; }
         .control-btn:active, .control-btn.pressed { background: rgba(255, 255, 255, 0.6); transform: scale(0.9); }
         #btn-fish { width: 100px; height: 100px; background: rgba(255, 107, 107, 0.8); border-color: #ffcccc; font-size: 50px; margin-bottom: 20px; }
 
-        /* 排行榜與畫面 */
+        /* 🔥 詳細介紹頁樣式 (Intro) */
+        .intro-modal {
+            background: rgba(0, 0, 0, 0.9); width: 90%; max-width: 600px; max-height: 85vh;
+            border-radius: 20px; border: 4px solid #4CAF50; padding: 20px;
+            overflow-y: auto; /* 內容太多時可捲動 */
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .intro-section { width: 100%; margin-bottom: 15px; text-align: left; background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; }
+        .intro-title { color: #FFD700; font-size: 1.2rem; margin-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px; }
+        .item-row { display: flex; align-items: center; margin: 5px 0; font-size: 1rem; }
+        .item-icon { font-size: 1.8rem; width: 50px; text-align: center; margin-right: 10px; }
+        .item-desc { flex: 1; }
+        .item-score { font-weight: bold; }
+        .good-text { color: #69F0AE; } .bad-text { color: #FF5252; } .rare-text { color: #FFD700; }
+
         .rank-list { list-style: none; padding: 0; margin: 10px 0; width: 100%; max-width: 300px; background: rgba(255,255,255,0.1); border-radius: 10px; }
         .rank-item { display: flex; justify-content: space-between; padding: 8px 15px; border-bottom: 1px solid rgba(255,255,255,0.2); font-size: 1.1rem; }
         .rank-item:nth-child(1) { color: #FFD700; font-weight: bold; } .rank-item:nth-child(2) { color: #C0C0C0; } .rank-item:nth-child(3) { color: #CD7F32; }
         .input-group { margin: 15px 0; display: flex; gap: 10px; justify-content: center; }
         #player-name { padding: 10px; border-radius: 10px; border: none; font-size: 1.2rem; width: 150px; text-align: center; }
+        
         .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: rgba(0,0,0,0.9); color: white; z-index: 200; }
         .screen.active { display: flex; animation: fadeIn 0.5s; }
         .btn { background: #FF6B6B; color: white; border: none; padding: 15px 40px; font-size: 1.5rem; border-radius: 50px; cursor: pointer; margin-top: 20px; font-family: 'Fredoka One'; box-shadow: 0 5px 0 #D32F2F; }
@@ -108,25 +92,18 @@
 
 <div id="game-container">
     <div id="bubbles-layer"></div>
-    
     <div class="ui-layer">
         <div class="score-box">分數: <span id="score">0</span></div>
         <div class="timer-box">時間: <span id="time">60</span></div>
     </div>
-    
-    <div class="energy-container">
-        <div id="energy-bar"></div>
-    </div>
+    <div class="energy-container"><div id="energy-bar"></div></div>
     <div id="combo-box">COMBO x<span id="combo-count">0</span> 🔥</div>
     <div id="stun-msg">暈眩! 😵</div>
-
     <div id="fishing-line"></div>
     <div id="hook">⚓</div>
     <div id="boat">⛵<div id="player-avatar"></div></div>
     <div id="sea-area"></div>
-
     <div id="btn-ult" onclick="activateUlt()">BOOM!</div>
-
     <div class="controls-layer" id="controls">
         <div class="control-btn" id="btn-left">⬅️</div>
         <div class="control-btn" id="btn-fish">🎣</div>
@@ -134,15 +111,38 @@
     </div>
 
     <div id="screen-start" class="screen active">
-        <h1>海洋淨化 v5.0</h1>
-        <p style="font-size: 1.1rem; line-height: 1.6;">
-            🌊 <b>波浪模式</b>: 垃圾會上下浮動，看準再抓！<br>
-            ⚡ <b>集氣大招</b>: 抓垃圾集氣，按 <span style="color:#FF4081">BOOM</span> 清全場！<br>
-            🦈 <b>小心鯊魚</b>: 被咬到會暈眩！
-        </p>
-        <button class="btn" onclick="startGame()">開始出航</button>
-        <h3 style="margin-top: 15px; color:#FFD700; font-size: 1.2rem;">🏆 榮譽榜</h3>
-        <ul id="start-leaderboard" class="rank-list"></ul>
+        <div class="intro-modal">
+            <h1 style="margin: 10px 0;">海洋淨化任務</h1>
+            <p style="font-size: 1rem; color: #ccc;">地球隊長需要你的幫忙！請駕駛清潔船，清除海裡的垃圾！</p>
+
+            <div class="intro-section">
+                <div class="intro-title">✅ 任務目標 (要抓這個!)</div>
+                <div class="item-row"><div class="item-icon">🥤</div><div class="item-desc">各種垃圾</div><div class="item-score good-text">+100 分</div></div>
+                <div class="item-row"><div class="item-icon">💎</div><div class="item-desc">稀有寶藏</div><div class="item-score rare-text">+500 分</div></div>
+                <div class="item-row"><div class="item-icon">⏰</div><div class="item-desc">神奇鬧鐘</div><div class="item-score good-text">+10 秒</div></div>
+            </div>
+
+            <div class="intro-section">
+                <div class="intro-title">❌ 請勿打擾 (不能抓!)</div>
+                <div class="item-row"><div class="item-icon">🐟</div><div class="item-desc">海洋生物</div><div class="item-score bad-text">-50 分</div></div>
+                <div class="item-row"><div class="item-icon">🦈</div><div class="item-desc">兇猛鯊魚</div><div class="item-score bad-text">暈眩 2秒</div></div>
+            </div>
+
+            <div class="intro-section">
+                <div class="intro-title">⚡ 特殊技能</div>
+                <div class="item-row">
+                    <div class="item-icon">🔥</div>
+                    <div class="item-desc">連續抓垃圾 5 次 <br><span style="color:#FFD700; font-size:0.9rem;">進入 FEVER 狂熱模式 (分數加倍)</span></div>
+                </div>
+                <div class="item-row">
+                    <div class="item-icon">🚀</div>
+                    <div class="item-desc">右上角能量條滿了 <br><span style="color:#FF4081; font-size:0.9rem;">點擊 BOOM 釋放衝擊波！</span></div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="startGame()">收到，出發！</button>
+            <div style="margin-top:10px; font-size:0.9rem; color:#888;">記得開聲音喔 🔊</div>
+        </div>
     </div>
 
     <div id="screen-end" class="screen">
@@ -158,25 +158,22 @@
             <button class="btn" onclick="location.reload()">再玩一次</button>
         </div>
     </div>
-
 </div>
 
 <script>
-    /* --- 🔊 音效系統 --- */
+    /* 音效 */
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSound(type) {
         if (audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
         osc.connect(gain); gain.connect(audioCtx.destination);
         const now = audioCtx.currentTime;
-        
         if (type === 'catch_good') { 
             osc.frequency.setValueAtTime(800, now); osc.frequency.exponentialRampToValueAtTime(1200, now+0.1);
             gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now+0.3);
             osc.start(now); osc.stop(now+0.3);
-        } else if (type === 'ult') { // 大絕招音效
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(200, now); osc.frequency.linearRampToValueAtTime(50, now+0.5);
+        } else if (type === 'ult') {
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, now); osc.frequency.linearRampToValueAtTime(50, now+0.5);
             gain.gain.setValueAtTime(0.5, now); gain.gain.linearRampToValueAtTime(0.01, now+0.5);
             osc.start(now); osc.stop(now+0.5);
         } else if (type === 'catch_bad') {
@@ -198,10 +195,10 @@
         }
     }
 
-    /* --- 🎮 參數 --- */
+    /* 參數 */
     const gameDuration = 60; const boatSpeed = 1.0; let baseSpawnRate = 800;
     const items = [
-        { type: 'trash', content: 'figs/bottle.png', isImage: true, score: 100, speed: 2, wave: 3 }, // wave: 波浪幅度
+        { type: 'trash', content: 'figs/bottle.png', isImage: true, score: 100, speed: 2, wave: 3 },
         { type: 'trash', content: '👢', isImage: false, score: 150, speed: 2.5, wave: 2 },
         { type: 'trash', content: '🥡', isImage: false, score: 120, speed: 3, wave: 4 },
         { type: 'trash', content: '💎', isImage: false, score: 500, speed: 5, wave: 1 }, 
@@ -211,7 +208,7 @@
         { type: 'shark', content: '🦈', isImage: false, score: -200, speed: 6, wave: 0, effect: 'stun' }
     ];
 
-    /* --- 變數 --- */
+    /* 變數 */
     let score = 0, combo = 0, energy = 0, isFever = false, isStunned = false, timeLeft = gameDuration, isPlaying = false;
     let gameLoopId, spawnLoopId, timerLoopId, bubbleLoopId;
     let boatPos = 50, moveDirection = 0, hookState = 'idle', hookY = 20, hookX = 50, caughtItem = null;
@@ -224,7 +221,7 @@
     const btnLeft = document.getElementById('btn-left'), btnRight = document.getElementById('btn-right'), btnFish = document.getElementById('btn-fish');
     const inputSection = document.getElementById('input-section'), leaderboardSection = document.getElementById('leaderboard-section');
 
-    /* --- 控制 --- */
+    /* 控制 */
     function setupBtn(btn, dir) {
         const action = (e) => { if(e.cancelable)e.preventDefault(); if(!isStunned){moveDirection=dir;btn.classList.add('pressed');}};
         const endAction = (e) => { if(e.cancelable)e.preventDefault(); if(moveDirection===dir)moveDirection=0; btn.classList.remove('pressed');};
@@ -241,7 +238,6 @@
     document.addEventListener('keydown', (e)=>{ if(isStunned)return; if(e.key==='ArrowLeft')moveDirection=-1; if(e.key==='ArrowRight')moveDirection=1; if(e.key===' '||e.key==='ArrowDown')triggerFish(); });
     document.addEventListener('keyup', (e)=>{ if((e.key==='ArrowLeft'&&moveDirection===-1)||(e.key==='ArrowRight'&&moveDirection===1))moveDirection=0; });
 
-    /* --- 🌊 氣泡特效 --- */
     function createBubble() {
         if(!isPlaying) return;
         const b = document.createElement('div'); b.classList.add('bubble');
@@ -253,21 +249,16 @@
         setTimeout(()=>b.remove(), 10000);
     }
 
-    /* --- 🚀 遊戲主迴圈 --- */
     function gameLoop() {
         if (!isPlaying) return;
-
         if (moveDirection !== 0 && !isStunned) {
             boatPos += moveDirection * boatSpeed;
             if (boatPos < 5) boatPos = 5; if (boatPos > 95) boatPos = 95;
             boatEl.style.left = boatPos + '%';
         }
-
-        if (hookState === 'idle') {
-            hookX = boatPos; lineEl.style.left = boatPos + '%'; hookEl.style.left = boatPos + '%';
-        } else if (hookState === 'down') {
-            hookY += 1.5; if (hookY > 95) hookState = 'up';
-        } else if (hookState === 'up') {
+        if (hookState === 'idle') { hookX = boatPos; lineEl.style.left = boatPos + '%'; hookEl.style.left = boatPos + '%'; }
+        else if (hookState === 'down') { hookY += 1.5; if (hookY > 95) hookState = 'up'; }
+        else if (hookState === 'up') {
             hookY -= 1.5;
             if (hookY <= 20) {
                 hookY = 20; hookState = 'idle';
@@ -281,8 +272,7 @@
     }
 
     function checkCollision() {
-        const hookRect = hookEl.getBoundingClientRect();
-        const itemsEls = document.querySelectorAll('.sea-item');
+        const hookRect = hookEl.getBoundingClientRect(); const itemsEls = document.querySelectorAll('.sea-item');
         itemsEls.forEach(el => {
             const itemRect = el.getBoundingClientRect();
             if (hookRect.left < itemRect.right && hookRect.right > itemRect.left && hookRect.bottom > itemRect.top && hookRect.top < itemRect.bottom) {
@@ -293,7 +283,6 @@
         });
     }
 
-    /* --- 物品生成 (含波浪參數) --- */
     function spawnItem() {
         if (!isPlaying) return;
         let itemData; const rand = Math.random();
@@ -304,24 +293,16 @@
         if(itemData.isImage) { el.style.backgroundImage = `url('${itemData.content}')`; el.style.backgroundSize = 'contain'; el.style.backgroundRepeat = 'no-repeat'; } else { el.innerText = itemData.content; }
         el.dataset.info = JSON.stringify(itemData);
         
-        // 設定初始高度，供波浪計算用
-        const startTop = Math.random() * 50 + 40;
-        el.dataset.startTop = startTop;
-        el.style.top = startTop + '%';
-
-        const fromLeft = Math.random() > 0.5;
-        el.style.left = fromLeft ? '-10%' : '110%';
-        el.dataset.direction = fromLeft ? 1 : -1;
-        el.dataset.speed = itemData.speed * (1 + (score/3000));
-        el.dataset.wave = itemData.wave; // 波浪強度
+        const startTop = Math.random() * 50 + 40; el.dataset.startTop = startTop; el.style.top = startTop + '%';
+        const fromLeft = Math.random() > 0.5; el.style.left = fromLeft ? '-10%' : '110%';
+        el.dataset.direction = fromLeft ? 1 : -1; el.dataset.speed = itemData.speed * (1 + (score/3000));
+        el.dataset.wave = itemData.wave;
         if (!fromLeft) el.style.transform = 'scaleX(-1)';
         seaArea.appendChild(el);
     }
 
-    /* --- 🌊 移動物品 (加入 Sine Wave) --- */
     function moveItems() {
-        const itemsEls = document.querySelectorAll('.sea-item');
-        const time = Date.now() / 500; // 時間因子
+        const itemsEls = document.querySelectorAll('.sea-item'); const time = Date.now() / 500;
         itemsEls.forEach(el => {
             if (el.parentElement === hookEl) return;
             let currentLeft = parseFloat(el.style.left);
@@ -329,28 +310,19 @@
             const speed = parseFloat(el.dataset.speed);
             const startTop = parseFloat(el.dataset.startTop);
             const waveAmp = parseFloat(el.dataset.wave);
-
-            // X 軸移動
             const newLeft = currentLeft + (direction * speed * 0.1); 
             el.style.left = newLeft + '%';
-            
-            // Y 軸波浪移動 (Base Top + Sin Wave)
             const newTop = startTop + Math.sin(time + newLeft/10) * waveAmp;
             el.style.top = newTop + '%';
-
             if (newLeft > 120 || newLeft < -20) el.remove();
         });
     }
 
-    /* --- 💥 分數/大絕招 --- */
     function processCatch(item) {
-        const type = item.data.type;
-        let points = item.data.score;
+        const type = item.data.type; let points = item.data.score;
         if (type === 'shark') { applyStun(); playSound('shark'); combo=0; hideCombo(); }
         if (type === 'trash' || type === 'powerup') {
-            playSound('catch_good'); combo++;
-            // 增加能量
-            chargeEnergy(10);
+            playSound('catch_good'); combo++; chargeEnergy(10);
             if (!isFever && combo > 1) points = Math.floor(points * (1 + (combo * 0.1)));
             if (isFever) points *= 2;
             showCombo();
@@ -366,51 +338,32 @@
     }
 
     function chargeEnergy(amount) {
-        if(isFever) return; // Fever 時不集氣
-        energy += amount;
-        if(energy >= 100) {
-            energy = 100;
-            btnUlt.classList.add('ult-ready');
-        }
+        if(isFever) return; energy += amount;
+        if(energy >= 100) { energy = 100; btnUlt.classList.add('ult-ready'); }
         energyBar.style.width = energy + '%';
     }
 
-    /* --- 🚀 施放大絕招 --- */
     function activateUlt() {
         if(energy < 100) return;
-        energy = 0; energyBar.style.width = '0%';
-        btnUlt.classList.remove('ult-ready');
-        
-        playSound('ult');
-        triggerShake();
-        
-        // 清除所有垃圾
-        const targets = document.querySelectorAll('.sea-item');
-        let count = 0;
+        energy = 0; energyBar.style.width = '0%'; btnUlt.classList.remove('ult-ready');
+        playSound('ult'); triggerShake();
+        const targets = document.querySelectorAll('.sea-item'); let count = 0;
         targets.forEach(el => {
             const data = JSON.parse(el.dataset.info);
             if(data.type === 'trash') {
-                count++;
-                createExplosion(el.style.left, el.style.top);
-                el.remove();
-                score += (data.score * 1.5); // 大絕招加成
+                count++; createExplosion(el.style.left, el.style.top); el.remove(); score += (data.score * 1.5);
             }
         });
-        
-        document.getElementById('score').innerText = score;
-        showPopup(`BOOM! +${Math.floor(count*150)}`, '#FF4081');
-        activateFever(); // 大絕招直接觸發 Fever
+        document.getElementById('score').innerText = score; showPopup(`BOOM! +${Math.floor(count*150)}`, '#FF4081'); activateFever();
     }
 
     function createExplosion(x, y) {
-        const div = document.createElement('div');
-        div.innerText = '💥'; div.style.position = 'absolute'; div.style.left = x; div.style.top = y; div.style.fontSize = '80px'; div.style.zIndex='100';
+        const div = document.createElement('div'); div.innerText = '💥'; div.style.position = 'absolute'; div.style.left = x; div.style.top = y; div.style.fontSize = '80px'; div.style.zIndex='100';
         container.appendChild(div); setTimeout(()=>div.remove(), 500);
     }
 
     function activateFever() {
-        if(isFever) return;
-        isFever = true; playSound('fever'); container.classList.add('fever-mode');
+        if(isFever) return; isFever = true; playSound('fever'); container.classList.add('fever-mode');
         clearInterval(spawnLoopId); spawnLoopId = setInterval(spawnItem, 300);
         showPopup("FEVER TIME!!", "#FFD700");
         setTimeout(() => {
@@ -419,7 +372,6 @@
         }, 5000);
     }
 
-    /* --- 其他功能 --- */
     function applyStun() { isStunned = true; hookEl.classList.add('stunned-hook'); stunMsg.style.display = 'block'; moveDirection = 0; setTimeout(() => { isStunned = false; hookEl.classList.remove('stunned-hook'); stunMsg.style.display = 'none'; }, 2000); }
     function showPopup(text, color) { const feedback = document.createElement('div'); feedback.classList.add('score-pop'); feedback.style.left = boatPos + '%'; feedback.style.top = '15%'; feedback.innerText = text; feedback.style.color = color; container.appendChild(feedback); setTimeout(() => feedback.remove(), 1000); }
     function showCombo() { if (combo < 2) return; comboBox.classList.add('combo-active'); comboCountEl.innerText = combo; comboBox.style.animation = 'none'; comboBox.offsetHeight; comboBox.style.animation = null; }
@@ -441,7 +393,6 @@
         renderLeaderboard('end-leaderboard'); inputSection.style.display = 'flex'; leaderboardSection.style.display = 'none';
     }
     
-    /* --- 排行榜 --- */
     const STORAGE_KEY = 'ocean_game_rank_v5';
     function getScores() { return localStorage.getItem(STORAGE_KEY) ? JSON.parse(localStorage.getItem(STORAGE_KEY)) : []; }
     function saveScoreToStorage(name, score) { const scores = getScores(); scores.push({ name: name, score: score }); scores.sort((a, b) => b.score - a.score); localStorage.setItem(STORAGE_KEY, JSON.stringify(scores.slice(0, 5))); }
@@ -452,8 +403,7 @@
         scores.forEach((s, index) => { let medal = index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : `${index + 1}. `; const li = document.createElement('li'); li.classList.add('rank-item'); li.innerHTML = `<span class="rank-name">${medal}${s.name}</span><span class="rank-score">${s.score}</span>`; listEl.appendChild(li); });
     }
     function submitScore() { const name = document.getElementById('player-name').value.trim(); if (!name) { alert('請輸入名字喔！'); return; } saveScoreToStorage(name, score); inputSection.style.display = 'none'; leaderboardSection.style.display = 'flex'; renderLeaderboard('end-leaderboard'); }
-    renderLeaderboard('start-leaderboard');
-
+    // 注意：首頁排行榜移除，因為空間留給詳細教學了
 </script>
 </body>
 </html>
